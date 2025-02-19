@@ -1,0 +1,21 @@
+{
+  "name": "fuarm-cli",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": {
+    "fuarm-cli": "./bin/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "commander": "^11.1.0",
+    "deepmerge": "^4.3.1",
+    "inquirer": "^9.3.7"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.7",
+    "typescript": "^5.4.3"
+  }
+}
