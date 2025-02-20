@@ -57,7 +57,7 @@ export const generateProject = async (config: any) => {
     if (microFramework) {
         const microFrameworkPath = path.join(__dirname, config.language.toLowerCase(), config.framework.toLowerCase(), microFramework);
         if (fs.existsSync(microFrameworkPath)) {
-            fs.cpSync(microFrameworkPath, projectPath, { recursive: true });
+            copyDirWithSkip(microFrameworkPath, projectPath);
         }
     }
 
