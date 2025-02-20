@@ -1,8 +1,4 @@
 {
-  "dependencies": {
-    "wujie-polyfill": "^1.1.2",
-    "wujie-vue3": "^1.0.25"
-  },
   "devDependencies": {
     "vite-plugin-cdn-import": "^1.0.1",
     "vite-plugin-static-copy": "^2.2.0"

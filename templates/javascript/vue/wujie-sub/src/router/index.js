@@ -9,21 +9,16 @@ const router = createRouter({
 
 const guardChain = useRouterGuardChain();
 
-guardChain.init(router);
-
 router.beforeEach((to, from, next) => {
   guardChain
     .before(to, next, router)
-    .progress()
-    .authorization()
-    .or()
     .dynamicRoute()
     .or()
-    .invoke(next());
+    .invoke(next);
 });
 
 router.afterEach((to) => {
-  guardChain.after(to, router).authorization().progress();
+  guardChain.after(to, router).invoke(() => window.$wujie?.bus.$emit("router-after"));
 });
 
 export default router;

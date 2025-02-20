@@ -7,11 +7,12 @@
   import WuJie from "wujie-vue3";
 
   const route = useRoute();
-  const { getMicroAppHostByAppId } = useMicroApp();
+  const { getMicroAppHostByAppid } = useMicroApp();
 
-  const props = {};
-
-  const url = computed(() => getMicroAppHostByAppId(route.meta.appId) + route.path);
+  const props = {
+    appid: route.meta.appid
+  };
+  const url = computed(() => getMicroAppHostByAppid(route.meta.appid) + route.path);
 </script>
 
 <template>
@@ -19,7 +20,7 @@
   <WuJie
     width="100%"
     height="100%"
-    :name="route.meta.appId"
+    :name="route.meta.appid"
     :url="url"
     :sync="false"
     :alive="true"

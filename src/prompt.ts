@@ -30,7 +30,7 @@ export const prompt = async () => {
             type: 'list',
             name: 'microFramework',
             message: '选择微服务框架:',
-            choices: ['WuJie'],
+            choices: ['WuJie', "WuJie-Sub"],
             when: (answers) => answers.microservices
         },
         {

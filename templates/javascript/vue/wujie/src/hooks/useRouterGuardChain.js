@@ -62,9 +62,9 @@ const dynamicRouteHandler = () => {
       name: item.code,
       meta: {
         title: item.name,
-        moduleId: item.moduleId,
+        appid: item.appid,
       },
-      component: item.addId ? null : importModules[`../${item.component}`],
+      component: item.appid ? () => import("@/views/frame/index.vue") : importModules[`../${item.component}`],
     }
   }
 
@@ -75,13 +75,14 @@ const dynamicRouteHandler = () => {
     }
 
     console.log("==dynamicRouteHandler before==", to);
-    // 注册微应用
-    microAppRegister();
-    // TODO: 添加动态路由逻辑
-    setTimeout(() => {
+    (async () => {
+      // 注册微应用
+      await microAppRegister();
+
+      // TODO: 添加动态路由逻辑
       let isRedirect = false;
       // 案例：菜单管理路由
-      const dynamicRoutes = [
+      const dynamicRoutes = await Promise.resolve([
         {
           id: 1,
           code: "error",
@@ -95,9 +96,9 @@ const dynamicRouteHandler = () => {
           name: "无界微应用A",
           layout: "Layout",
           component: "views/error/404.vue",
-          appId: "571e6138657b43d3ad38662fa2eb4266"
+          appid: "571e6138657b43d3ad38662fa2eb4266"
         }
-      ];
+      ]);
 
       // TODO：存储动态路由数据
       dynamicRoutes?.forEach(dynamicRoute => {
@@ -107,9 +108,9 @@ const dynamicRouteHandler = () => {
         router.addRoute(...[dynamicRoute.layout, createRoute(dynamicRoute)].filter(item => !!item));
       });
 
-      return isRedirect ? next({ ...to, replace: true }) : next({ name: "Layout" });
-    }, 2000);
-  };
+      return isRedirect ? next({...to, replace: true}) : next({name: "Layout"});
+    })();
+  }
 
   return {
     before

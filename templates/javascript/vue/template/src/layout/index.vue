@@ -2,7 +2,7 @@
 
 <template>
   <div>
-    <div>布局</div>
+    <div>sub布局</div>
     <router-view v-slot="{ Component }">
       <keep-alive>
         <component :is="Component"></component>
