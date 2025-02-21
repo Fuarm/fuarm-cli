@@ -38,6 +38,7 @@ export default defineConfig({
           path: 'vue-router.global.prod.js',
         },
       ],
+      generateScriptTag: () => ({ attrs: { ignore: true } })
     })
   ],
   resolve: {

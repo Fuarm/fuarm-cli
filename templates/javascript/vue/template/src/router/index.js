@@ -19,7 +19,7 @@ router.beforeEach((to, from, next) => {
     .or()
     .dynamicRoute()
     .or()
-    .invoke(next());
+    .invoke(next);
 });
 
 router.afterEach((to) => {
