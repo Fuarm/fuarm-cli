@@ -8,7 +8,7 @@ import { getMenuList } from "@/api";
 import { useFrame } from "@/hooks/useFrame";
 
 const frame = useFrame();
-const { microAppRegister, isSystemMicroApp, updateMicroAppid } = useMicroApp();
+const { microAppRegister, isSystemMicroApp, updateMicroAppid, isEqualByAppid } = useMicroApp();
 
 // 进度条
 const progressHandler = () => {
@@ -121,13 +121,17 @@ const microAppHandler = () => {
 
   const before = (to, next) => {
     console.log("==microAppHandler before==", to);
-    _next = to.redirectedFrom ? null : next;
+    const isEqual = isEqualByAppid(to.meta.appid);
     updateMicroAppid(to.meta.appid);
-    return !!to.redirectedFrom || isSystemMicroApp(to.meta.appid);
+    _next = isEqual ? next : null;
+    // WuJie.bus.$emit("router-change", to);
+    return !isEqual || isSystemMicroApp(to.meta.appid);
   };
 
   const after = (to) => {
+    console.log("==microAppHandler after==", to);
     frame.setKeepaliveKey(to.name, uuidv4());
+    return true;
   };
 
   return {

@@ -28,11 +28,16 @@ export const useMicroApp = () => {
     microAppid.value = isSystemMicroApp(appid) ? null : appid;
   };
 
+  const isEqualByAppid = (appid) => {
+    return microAppid.value === appid;
+  };
+
   return {
     microAppid,
     microAppRegister,
     getMicroAppHostByAppid,
     isSystemMicroApp,
-    updateMicroAppid
+    updateMicroAppid,
+    isEqualByAppid
   };
 };
