@@ -24,10 +24,15 @@ export const useMicroApp = () => {
 
   const isSystemMicroApp = (appid) => microAppMap.get(appid)?.code === "FRAME";
 
+  const updateMicroAppid = (appid) => {
+    microAppid.value = isSystemMicroApp(appid) ? null : appid;
+  };
+
   return {
     microAppid,
     microAppRegister,
     getMicroAppHostByAppid,
-    isSystemMicroApp
+    isSystemMicroApp,
+    updateMicroAppid
   };
 };

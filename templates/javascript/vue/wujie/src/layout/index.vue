@@ -6,9 +6,9 @@
   const { keepaliveKeyMap } = useFrame();
   const { microAppid } = useMicroApp();
 
-  const MicroAppComponent = computed(
-    () => microAppid.value ?? defineAsyncComponent(() => import("@/views/frame/index.vue"))
-  );
+  const MicroAppComponent = computed(() => {
+    return microAppid.value ? defineAsyncComponent(() => import("@/views/frame/index.vue")) : null;
+  });
 </script>
 
 <template>

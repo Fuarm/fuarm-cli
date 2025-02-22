@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "uuid": "^11.1.0",
     "wujie-polyfill": "^1.1.2",
     "wujie-vue3": "^1.0.25"
   },

@@ -9,46 +9,51 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default defineConfig({
-  plugins: [
-    vue(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: "node_modules/vue/dist/vue.runtime.global.prod.js",
-          dest: "libs"
-        },
-        {
-          src: "node_modules/vue-router/dist/vue-router.global.prod.js",
-          dest: "libs"
-        }
-      ]
-    }),
-    importCDN({
-      prodUrl: "/libs/{path}",
-      modules: [
-        {
-          name: "vue",
-          var: "Vue",
-          path: "vue.runtime.global.prod.js"
-        },
-        {
-          name: "vue-router",
-          var: "VueRouter",
-          path: "vue-router.global.prod.js"
-        }
-      ]
-    })
-  ],
-  resolve: {
-    // 配置路径别名
-    alias: {
-      "@": path.resolve(__dirname, "./src")
-    }
-  },
-  build: {
-    rollupOptions: {
-      external: ["vue", "vue-router"]
-    }
+export default defineConfig(({ mode }) => {
+  const plugins = [vue()];
+  if (mode === "production") {
+    plugins.push(
+      viteStaticCopy({
+        targets: [
+          {
+            src: "node_modules/vue/dist/vue.runtime.global.prod.js",
+            dest: "libs"
+          },
+          {
+            src: "node_modules/vue-router/dist/vue-router.global.prod.js",
+            dest: "libs"
+          }
+        ]
+      }),
+      importCDN({
+        prodUrl: "/libs/{path}",
+        modules: [
+          {
+            name: "vue",
+            var: "Vue",
+            path: "vue.runtime.global.prod.js"
+          },
+          {
+            name: "vue-router",
+            var: "VueRouter",
+            path: "vue-router.global.prod.js"
+          }
+        ]
+      })
+    );
   }
+
+  return {
+    plugins,
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src")
+      }
+    },
+    build: {
+      rollupOptions: {
+        external: ["vue", "vue-router"]
+      }
+    }
+  };
 });

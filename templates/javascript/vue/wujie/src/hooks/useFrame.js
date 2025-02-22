@@ -1,13 +1,11 @@
 import { shallowRef } from "vue";
-import { useRouter } from "vue-router";
+import router from "@/router/index.js";
 
 // 存在当前页面的路由数据
 const routes = shallowRef();
 
 // 存储当前缓存页面key
 const keepaliveKeyMap = new Map();
-
-const router = useRouter();
 
 export const useFrame = () => {
   const init = () => {
@@ -33,8 +31,10 @@ export const useFrame = () => {
     return routes.value?.filter((route) => route.appid === appid);
   };
 
-  const updateKeepaliveKey = (key, value) => {
-    keepaliveKeyMap.set(key, value);
+  const setKeepaliveKey = (key, value) => {
+    if (!keepaliveKeyMap.get(key)) {
+      keepaliveKeyMap.set(key, value);
+    }
   };
 
   return {
@@ -43,6 +43,6 @@ export const useFrame = () => {
     updateRoutes,
     isNotEmptyByRoutes,
     queryRoutesByMicroAppid,
-    updateKeepaliveKey
+    setKeepaliveKey
   };
 };

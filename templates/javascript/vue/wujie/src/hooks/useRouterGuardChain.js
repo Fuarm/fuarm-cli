@@ -1,5 +1,6 @@
 import topbar from "topbar";
 import WuJie from "wujie-vue3";
+import { v4 as uuidv4 } from "uuid";
 
 import createChain from "@/utils/createChain";
 import { useMicroApp } from "@/hooks/useMicroApp";
@@ -7,7 +8,7 @@ import { getMenuList } from "@/api";
 import { useFrame } from "@/hooks/useFrame";
 
 const frame = useFrame();
-const { microAppRegister, isSystemMicroApp } = useMicroApp();
+const { microAppRegister, isSystemMicroApp, updateMicroAppid } = useMicroApp();
 
 // 进度条
 const progressHandler = () => {
@@ -67,7 +68,7 @@ const dynamicRouteHandler = () => {
         title: item.name,
         appid: item.appid
       },
-      component: isSystemMicroApp(item.appid) ? null : importModules[`../${item.component}`]
+      component: isSystemMicroApp(item.appid) ? importModules[`../${item.component}`] : null
     };
   };
 
@@ -108,12 +109,41 @@ const dynamicRouteHandler = () => {
   };
 };
 
+// 微应用
+const microAppHandler = () => {
+  let _next = null;
+
+  const init = () => {
+    WuJie.bus.$on("router-after", () => {
+      _next?.();
+    });
+  };
+
+  const before = (to, next) => {
+    console.log("==microAppHandler before==", to);
+    _next = to.redirectedFrom ? null : next;
+    updateMicroAppid(to.meta.appid);
+    return !!to.redirectedFrom || isSystemMicroApp(to.meta.appid);
+  };
+
+  const after = (to) => {
+    frame.setKeepaliveKey(to.name, uuidv4());
+  };
+
+  return {
+    init,
+    before,
+    after
+  };
+};
+
 export const useRouterGuardChain = () => {
   const { instance: chain } = createChain();
 
   const _progressHandler = progressHandler();
   const _authorizationHandler = authorizationHandler();
   const _dynamicRouteHandler = dynamicRouteHandler();
+  const _microAppHandler = microAppHandler();
 
   let invoke = null;
 
@@ -153,6 +183,11 @@ export const useRouterGuardChain = () => {
 
   chain.dynamicRoute = function () {
     chain.invoke(() => invoke(_dynamicRouteHandler));
+    return this;
+  };
+
+  chain.microApp = function () {
+    chain.invoke(() => invoke(_microAppHandler));
     return this;
   };
 

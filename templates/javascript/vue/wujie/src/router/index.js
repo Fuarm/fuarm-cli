@@ -9,15 +9,23 @@ const router = createRouter({
 
 const guardChain = useRouterGuardChain();
 
+guardChain.init(router).microApp().progress();
+
 router.beforeEach((to, from, next) => {
-  guardChain.before(to, next, router).dynamicRoute().or().invoke(next);
+  guardChain
+    .before(to, next, router)
+    .progress()
+    .authorization()
+    .or()
+    .dynamicRoute()
+    .or()
+    .microApp()
+    .or()
+    .invoke(next);
 });
 
 router.afterEach((to) => {
-  guardChain.after(to, router).invoke(() => {
-    console.log("==MicroApp Router after==", to);
-    window.$wujie?.bus.$emit("router-after");
-  });
+  guardChain.after(to, router).authorization().or().microApp().and().progress();
 });
 
 export default router;
