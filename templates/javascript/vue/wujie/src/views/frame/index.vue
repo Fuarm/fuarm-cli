@@ -19,15 +19,7 @@
   const url = computed(
     () => getMicroAppHostByAppid(route.meta.appid) + route.path
   );
-  const wuJiePlugin = [
-    InstanceofPlugin(),
-    {
-      jsBeforeLoaders: [
-        { content: "window.Vue = window.parent.Vue" },
-        { content: "window.VueRouter = window.parent.VueRouter" }
-      ]
-    }
-  ];
+  const wuJiePlugin = [InstanceofPlugin()];
 </script>
 
 <template>
