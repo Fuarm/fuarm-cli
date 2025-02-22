@@ -26,17 +26,3 @@ export const getMenuList = () => {
     }
   ]);
 };
-
-// 模拟子应用注册列表
-export const getMicroAppList = () => {
-  return Promise.resolve([
-    {
-      appid: "571e6138657b43d3ad38662fa2eb4266",
-      host: "http://localhost:4174"
-    },
-    {
-      appid: "571e6138657b43d3ad38662fa2eb4265",
-      host: "http://localhost:5174"
-    }
-  ]);
-};

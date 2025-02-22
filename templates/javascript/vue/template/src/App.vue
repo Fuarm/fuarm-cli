@@ -1,7 +1,5 @@
-<script>
-  export default {
-    name: "App"
-  };
+<script setup>
+  defineOptions({ name: "App" });
 </script>
 
 <template>

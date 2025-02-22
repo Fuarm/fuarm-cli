@@ -1,6 +1,9 @@
+import { ref } from "vue";
+
 import { getMicroAppList } from "@/api";
 
 const microAppMap = new Map();
+const microAppid = ref(null);
 
 export const useMicroApp = () => {
   const microAppRegister = async () => {
@@ -9,7 +12,7 @@ export const useMicroApp = () => {
       const data = await getMicroAppList();
 
       for (const item of data) {
-        microAppMap.set(item.appid, item.host);
+        microAppMap.set(item.appid, item);
       }
     } catch (error) {
       microAppMap.clear();
@@ -17,10 +20,14 @@ export const useMicroApp = () => {
     }
   };
 
-  const getMicroAppHostByAppid = (appid) => microAppMap.get(appid);
+  const getMicroAppHostByAppid = (appid) => microAppMap.get(appid)?.host || "";
+
+  const isSystemMicroApp = (appid) => microAppMap.get(appid)?.code === "FRAME";
 
   return {
+    microAppid,
     microAppRegister,
-    getMicroAppHostByAppid
+    getMicroAppHostByAppid,
+    isSystemMicroApp
   };
 };

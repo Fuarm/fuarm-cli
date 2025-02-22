@@ -6,8 +6,8 @@ import { useMicroApp } from "@/hooks/useMicroApp";
 import { getMenuList } from "@/api";
 import { useFrame } from "@/hooks/useFrame";
 
-const { microAppRegister } = useMicroApp();
 const frame = useFrame();
+const { microAppRegister, isSystemMicroApp } = useMicroApp();
 
 // 进度条
 const progressHandler = () => {
@@ -67,9 +67,7 @@ const dynamicRouteHandler = () => {
         title: item.name,
         appid: item.appid
       },
-      component: item.appid
-        ? () => import("@/views/frame/index.vue")
-        : importModules[`../${item.component}`]
+      component: isSystemMicroApp(item.appid) ? null : importModules[`../${item.component}`]
     };
   };
 
@@ -97,7 +95,7 @@ const dynamicRouteHandler = () => {
           isRedirect = true;
         }
         router.addRoute(
-            ...[dynamicRoute.layout, createRoute(dynamicRoute)].filter((item) => !!item)
+          ...[dynamicRoute.layout, createRoute(dynamicRoute)].filter((item) => !!item)
         );
       });
 
