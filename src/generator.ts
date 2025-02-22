@@ -48,8 +48,8 @@ export const generateProject = async (config: any) => {
         if (fs.existsSync(eslintPath)) {
             copyDirWithSkip(eslintPath, projectPath);
 
-            fs.chmodSync(path.join(projectPath, ".eslintrc.js"), 0o444); // 设置文件为只读
-            fs.chmodSync(path.join(projectPath, ".prettierrc.js"), 0o444); // 设置文件为只读
+            fs.chmodSync(path.join(projectPath, "eslint.config.js"), 0o444); // 设置文件为只读
+            fs.chmodSync(path.join(projectPath, "prettier.config.js"), 0o444); // 设置文件为只读
         }
     }
 

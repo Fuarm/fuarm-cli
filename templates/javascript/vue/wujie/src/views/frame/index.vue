@@ -12,16 +12,18 @@
   const props = {
     appid: route.meta.appid
   };
-  const url = computed(() => getMicroAppHostByAppid(route.meta.appid) + route.path);
+  const url = computed(
+    () => getMicroAppHostByAppid(route.meta.appid) + route.path
+  );
   const wuJiePlugin = [
     InstanceofPlugin(),
     {
       jsBeforeLoaders: [
-        { content: 'window.Vue = window.parent.Vue' },
-        { content: 'window.VueRouter = window.parent.VueRouter' }
+        { content: "window.Vue = window.parent.Vue" },
+        { content: "window.VueRouter = window.parent.VueRouter" }
       ]
     }
-  ]
+  ];
 </script>
 
 <template>
@@ -35,5 +37,5 @@
     :alive="true"
     :props="props"
     :plugins="wuJiePlugin"
-  ></WuJie>
+  />
 </template>

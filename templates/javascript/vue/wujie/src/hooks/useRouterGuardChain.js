@@ -3,6 +3,7 @@ import WuJie from "wujie-vue3";
 
 import createChain from "@/utils/createChain";
 import { useMicroApp } from "@/hooks/useMicroApp";
+import { getMenuList } from "@/api/index.js";
 
 const { microAppRegister } = useMicroApp();
 
@@ -12,7 +13,7 @@ const progressHandler = () => {
     WuJie.bus.$on("router-after", () => {
       topbar.hide();
     });
-  }
+  };
 
   const before = () => {
     topbar.show();
@@ -62,11 +63,13 @@ const dynamicRouteHandler = () => {
       name: item.code,
       meta: {
         title: item.name,
-        appid: item.appid,
+        appid: item.appid
       },
-      component: item.appid ? () => import("@/views/frame/index.vue") : importModules[`../${item.component}`],
-    }
-  }
+      component: item.appid
+        ? () => import("@/views/frame/index.vue")
+        : importModules[`../${item.component}`]
+    };
+  };
 
   const before = (to, next, router) => {
     // TODO: 获取存储的动态路由的数据，如果存在 return true
@@ -79,38 +82,27 @@ const dynamicRouteHandler = () => {
       // 注册微应用
       await microAppRegister();
 
-      // TODO: 添加动态路由逻辑
       let isRedirect = false;
       // 案例：菜单管理路由
-      const dynamicRoutes = await Promise.resolve([
-        {
-          id: 1,
-          code: "error",
-          name: "404页面",
-          layout: "",
-          component: "views/error/404.vue",
-        },
-        {
-          id: 2,
-          code: "WuJie_1",
-          name: "无界微应用A",
-          layout: "Layout",
-          component: "views/error/404.vue",
-          appid: "571e6138657b43d3ad38662fa2eb4266"
-        }
-      ]);
+      const dynamicRoutes = await getMenuList();
 
       // TODO：存储动态路由数据
-      dynamicRoutes?.forEach(dynamicRoute => {
+      dynamicRoutes?.forEach((dynamicRoute) => {
         if (dynamicRoute.code.toLowerCase() === to.path.replace(/\//, "")) {
           isRedirect = true;
         }
-        router.addRoute(...[dynamicRoute.layout, createRoute(dynamicRoute)].filter(item => !!item));
+        router.addRoute(
+          ...[dynamicRoute.layout, createRoute(dynamicRoute)].filter(
+            (item) => !!item
+          )
+        );
       });
 
-      return isRedirect ? next({...to, replace: true}) : next({name: "Layout"});
+      return isRedirect
+        ? next({ ...to, replace: true })
+        : next({ name: "Layout" });
     })();
-  }
+  };
 
   return {
     before

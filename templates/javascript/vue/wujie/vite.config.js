@@ -2,8 +2,8 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import path from "path";
 import { fileURLToPath } from "url";
-import importCDN from 'vite-plugin-cdn-import';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
+import importCDN from "vite-plugin-cdn-import";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
 // 获取当前文件目录路径
 const __filename = fileURLToPath(import.meta.url);
@@ -15,12 +15,12 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: 'node_modules/vue/dist/vue.runtime.global.prod.js',
-          dest: 'libs'
+          src: "node_modules/vue/dist/vue.runtime.global.prod.js",
+          dest: "libs"
         },
         {
-          src: 'node_modules/vue-router/dist/vue-router.global.prod.js',
-          dest: 'libs'
+          src: "node_modules/vue-router/dist/vue-router.global.prod.js",
+          dest: "libs"
         }
       ]
     }),
@@ -28,16 +28,16 @@ export default defineConfig({
       prodUrl: "/libs/{path}",
       modules: [
         {
-          name: 'vue',
-          var: 'Vue',
-          path: 'vue.runtime.global.prod.js',
+          name: "vue",
+          var: "Vue",
+          path: "vue.runtime.global.prod.js"
         },
         {
-          name: 'vue-router',
-          var: 'VueRouter',
-          path: 'vue-router.global.prod.js',
-        },
-      ],
+          name: "vue-router",
+          var: "VueRouter",
+          path: "vue-router.global.prod.js"
+        }
+      ]
     })
   ],
   resolve: {
@@ -48,7 +48,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ['vue', 'vue-router'],
-    },
-  },
+      external: ["vue", "vue-router"]
+    }
+  }
 });
