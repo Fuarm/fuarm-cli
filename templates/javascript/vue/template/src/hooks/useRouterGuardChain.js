@@ -1,6 +1,9 @@
 import topbar from "topbar";
 
 import createChain from "@/utils/createChain";
+import { useFrame } from "@/hooks/useFrame";
+
+const frame = useFrame();
 
 // 进度条
 const progressHandler = () => {
@@ -51,48 +54,45 @@ const dynamicRouteHandler = () => {
       name: item.code,
       meta: {
         title: item.name,
-        moduleId: item.moduleId,
       },
-      component: importModules[`../${item.component}`],
-    }
-  }
+      component: importModules[`../${item.component}`]
+    };
+  };
 
   const before = (to, next, router) => {
     if (router.hasRoute(to.name)) {
       return true;
     }
 
+    if (frame.isNotEmptyByRoutes()) {
+      return next({ name: "Layout" });
+    }
+
     console.log("==dynamicRouteHandler before==", to);
-    // TODO: 添加动态路由逻辑
-    setTimeout(() => {
+    (async () => {
+      // 注册微应用
+      await microAppRegister();
+
       let isRedirect = false;
       // 案例：菜单管理路由
-      const dynamicRoutes = [
-        {
-          id: 1,
-          code: "error",
-          name: "404页面",
-          layout: "",
-          component: "views/error/404.vue",
-        },
-        {
-          id: 2,
-          code: "404",
-          name: "404页面",
-          layout: "Layout",
-          component: "views/error/404.vue",
-        }
-      ];
+      const dynamicRoutes = await getMenuList();
+      frame.updateRoutes(dynamicRoutes);
 
-      dynamicRoutes?.forEach(dynamicRoute => {
+      dynamicRoutes?.forEach((dynamicRoute) => {
         if (dynamicRoute.code.toLowerCase() === to.path.replace(/\//, "")) {
           isRedirect = true;
         }
-        router.addRoute(...[dynamicRoute.layout, createRoute(dynamicRoute)].filter(item => !!item));
+        router.addRoute(
+            ...[dynamicRoute.layout, createRoute(dynamicRoute)].filter(
+                (item) => !!item
+            )
+        );
       });
 
-      return isRedirect ? next({ ...to, replace: true }) : next({ name: "Layout" });
-    }, 2000);
+      return isRedirect
+          ? next({ ...to, replace: true })
+          : next({ name: "Layout" });
+    })();
   };
 
   return {

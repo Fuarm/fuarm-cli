@@ -5,12 +5,16 @@
   import { useMicroApp } from "@/hooks/useMicroApp";
 
   import WuJie from "wujie-vue3";
+  import { useFrame } from "@/hooks/useFrame.js";
 
   const route = useRoute();
+  const frame = useFrame();
+
   const { getMicroAppHostByAppid } = useMicroApp();
 
   const props = {
-    appid: route.meta.appid
+    appid: route.meta.appid,
+    routes: frame.queryRoutesByMicroAppid(route.meta.appid)
   };
   const url = computed(
     () => getMicroAppHostByAppid(route.meta.appid) + route.path

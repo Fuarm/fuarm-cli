@@ -3,9 +3,11 @@ import WuJie from "wujie-vue3";
 
 import createChain from "@/utils/createChain";
 import { useMicroApp } from "@/hooks/useMicroApp";
-import { getMenuList } from "@/api/index.js";
+import { getMenuList } from "@/api";
+import { useFrame } from "@/hooks/useFrame";
 
 const { microAppRegister } = useMicroApp();
+const frame = useFrame();
 
 // 进度条
 const progressHandler = () => {
@@ -72,9 +74,12 @@ const dynamicRouteHandler = () => {
   };
 
   const before = (to, next, router) => {
-    // TODO: 获取存储的动态路由的数据，如果存在 return true
     if (router.hasRoute(to.name)) {
       return true;
+    }
+
+    if (frame.isNotEmptyByRoutes()) {
+      return next({ name: "Layout" });
     }
 
     console.log("==dynamicRouteHandler before==", to);
@@ -85,22 +90,18 @@ const dynamicRouteHandler = () => {
       let isRedirect = false;
       // 案例：菜单管理路由
       const dynamicRoutes = await getMenuList();
+      frame.updateRoutes(dynamicRoutes);
 
-      // TODO：存储动态路由数据
       dynamicRoutes?.forEach((dynamicRoute) => {
         if (dynamicRoute.code.toLowerCase() === to.path.replace(/\//, "")) {
           isRedirect = true;
         }
         router.addRoute(
-          ...[dynamicRoute.layout, createRoute(dynamicRoute)].filter(
-            (item) => !!item
-          )
+            ...[dynamicRoute.layout, createRoute(dynamicRoute)].filter((item) => !!item)
         );
       });
 
-      return isRedirect
-        ? next({ ...to, replace: true })
-        : next({ name: "Layout" });
+      return isRedirect ? next({ ...to, replace: true }) : next({ name: "Layout" });
     })();
   };
 
