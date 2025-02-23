@@ -1,13 +1,13 @@
 <script setup>
-  import { useRouter } from "vue-router";
   import { computed } from "vue";
+  import { useRouter } from "vue-router";
 
   const router = useRouter();
+  const keepaliveKeyMap = computed(() => window.$wujie?.props.keepaliveKeyMap);
+
   window.$wujie?.bus.$on(`router-change:${window.$wujie?.props.appid || ""}`, (path) => {
     router.push({ path });
   });
-
-  const keepaliveKeyMap = computed(() => window.$wujie?.props.keepaliveKeyMap);
 </script>
 
 <template>
