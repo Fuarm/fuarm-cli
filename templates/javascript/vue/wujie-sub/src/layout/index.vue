@@ -1,15 +1,15 @@
 <script setup>
-  // import { useRouter } from "vue-router";
-  //
-  // const router = useRouter();
-  // window.$wujie?.bus.$on("router-change", (to) => {
-  //   router.push(to);
-  // });
+  import { useRouter } from "vue-router";
+
+  const router = useRouter();
+  window.$wujie?.bus.$on("router-change", (to) => {
+    router.push(to);
+  });
 </script>
 
 <template>
   <div>
-    <div>布局</div>
+    <div>布局222</div>
 
     <router-view v-slot="{ Component }">
       <keep-alive>

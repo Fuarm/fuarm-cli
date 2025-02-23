@@ -20,24 +20,36 @@ export const useMicroApp = () => {
     }
   };
 
-  const getMicroAppHostByAppid = (appid) => microAppMap.get(appid)?.host || "";
-
   const isSystemMicroApp = (appid) => microAppMap.get(appid)?.code === "FRAME";
 
   const updateMicroAppid = (appid) => {
     microAppid.value = isSystemMicroApp(appid) ? null : appid;
   };
 
+  const updateMicroAppTargetRoute = (to) => {
+    if (!to.meta.appid) return;
+    microAppMap.set(to.meta.appid, {
+      ...microAppMap.get(to.meta.appid),
+      route: to
+    });
+  };
+
   const isEqualByAppid = (appid) => {
     return microAppid.value === appid;
+  };
+
+  const queryMicroAppTargetURLByAppid = (appid) => {
+    const microAppInfo = microAppMap.get(appid);
+    return (microAppInfo?.host || "") + (microAppInfo?.route?.path || "");
   };
 
   return {
     microAppid,
     microAppRegister,
-    getMicroAppHostByAppid,
     isSystemMicroApp,
     updateMicroAppid,
-    isEqualByAppid
+    isEqualByAppid,
+    updateMicroAppTargetRoute,
+    queryMicroAppTargetURLByAppid
   };
 };

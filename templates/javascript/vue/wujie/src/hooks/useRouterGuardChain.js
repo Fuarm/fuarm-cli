@@ -12,7 +12,7 @@ const {
   microAppRegister,
   isSystemMicroApp,
   updateMicroAppid,
-  updateMicroAppTargetTo,
+  updateMicroAppTargetRoute,
   isEqualByAppid
 } = useMicroApp();
 
@@ -20,6 +20,7 @@ const {
 const progressHandler = () => {
   const init = () => {
     WuJie.bus.$on("router-after", () => {
+      console.log("无界 after 进度条");
       topbar.hide();
     });
   };
@@ -29,6 +30,7 @@ const progressHandler = () => {
   };
 
   const after = () => {
+    console.log("after 进度条");
     topbar.hide();
   };
 
@@ -102,7 +104,7 @@ const dynamicRouteHandler = () => {
           isRedirect = true;
         }
         router.addRoute(
-            ...[dynamicRoute.layout, createRoute(dynamicRoute)].filter((item) => !!item)
+          ...[dynamicRoute.layout, createRoute(dynamicRoute)].filter((item) => !!item)
         );
       });
 
@@ -128,7 +130,7 @@ const microAppHandler = () => {
   const before = (to, next) => {
     console.log("==microAppHandler before==", to);
     const isEqual = isEqualByAppid(to.meta.appid);
-    updateMicroAppTargetTo(to);
+    updateMicroAppTargetRoute(to);
     updateMicroAppid(to.meta.appid);
     _next = isEqual ? next : null;
     if (isEqual && !isSystemMicroApp(to.meta.appid)) {
@@ -140,7 +142,9 @@ const microAppHandler = () => {
   const after = (to) => {
     console.log("==microAppHandler after==", to);
     frame.setKeepaliveKey(to.name, uuidv4());
-    return true;
+
+    // 记录每一个微服务的当前路由 （当前路由无变更 - ture）
+    return isSystemMicroApp(to.meta.appid);
   };
 
   return {

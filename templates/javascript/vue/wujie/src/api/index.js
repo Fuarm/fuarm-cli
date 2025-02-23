@@ -19,6 +19,14 @@ export const getMenuList = () => {
     },
     {
       id: 3,
+      code: "WuJie_3",
+      name: "无界微应用A Demo页面-3",
+      layout: "Layout",
+      component: "views/error/404.vue",
+      appid: "571e6138657b43d3ad38662fa2eb4265"
+    },
+    {
+      id: 4,
       code: "WuJie_2",
       name: "无界微应用A Demo页面",
       layout: "Layout",
@@ -41,7 +49,7 @@ export const getMicroAppList = () => {
       name: "子应用-经租模块",
       code: "LEASE",
       appid: "571e6138657b43d3ad38662fa2eb4264",
-      host: "http://localhost:4174"
+      host: "http://localhost:4173"
     },
     {
       name: "子应用-其他模块",

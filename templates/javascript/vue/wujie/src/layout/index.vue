@@ -20,6 +20,7 @@
 
     <button @click="router.push({ path: '/wujie_1' })">无界1</button>
     <button @click="router.push({ path: '/wujie_2' })">无界2</button>
+    <button @click="router.push({ path: '/wujie_3' })">无界3</button>
     <router-view v-slot="{ Component, route }">
       <keep-alive :include="Array.from(keepaliveKeyMap.values())">
         <component :is="Component" :key="keepaliveKeyMap.get(route.name) || route.name" />
