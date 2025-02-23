@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 
 // 存在当前页面的路由数据
-const routes = shallowRef();
+const routes = shallowRef([]);
 
 export const useFrame = () => {
   const init = () => {

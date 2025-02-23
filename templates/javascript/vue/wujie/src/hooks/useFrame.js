@@ -1,10 +1,11 @@
 import router from "@/router";
+import { reactive } from "vue";
 
 // 存在当前页面的路由数据
 let routes = [];
 
 // 存储当前缓存页面key
-const keepaliveKeyMap = new Map();
+const keepaliveKeyMap = reactive(new Map());
 
 export const useFrame = () => {
   const init = () => {

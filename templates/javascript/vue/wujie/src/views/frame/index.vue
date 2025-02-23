@@ -12,8 +12,10 @@
 
   const props = {
     appid: attrs.appid,
-    routes: frame.queryRoutesByAppid(attrs.appid)
+    routes: frame.queryRoutesByAppid(attrs.appid),
+    keepaliveKeyMap: frame.keepaliveKeyMap
   };
+
   const url = computed(() => queryMicroAppTargetURLByAppid(attrs.appid));
   const wuJiePlugin = [InstanceofPlugin()];
 </script>

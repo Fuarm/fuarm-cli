@@ -36,6 +36,7 @@ const dynamicRouteHandler = () => {
       window.$wujie?.props.appid || "",
       to
     );
+
     (async () => {
       let isRedirect = false;
       // 案例：菜单管理路由

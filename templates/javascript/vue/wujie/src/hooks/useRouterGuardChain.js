@@ -133,6 +133,8 @@ const microAppHandler = () => {
     const isFirstLoaded = isFirstLoadedByAppid(to.meta.appid);
     // 判断是否是系统应用
     const isSystemApp = isSystemMicroApp(to.meta.appid);
+    // 更新视图缓存key
+    frame.setKeepaliveKey(to.name, uuidv4());
     // 更新当前的应用路由
     updateMicroAppTargetRoute(to);
     // 更新当前的应用id
@@ -147,7 +149,6 @@ const microAppHandler = () => {
 
   const after = (to) => {
     console.log("==microAppHandler after==", to);
-    frame.setKeepaliveKey(to.name, uuidv4());
     return isSystemMicroApp(to.meta.appid);
   };
 

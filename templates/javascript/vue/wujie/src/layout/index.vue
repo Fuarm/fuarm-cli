@@ -5,13 +5,18 @@
   import { useMicroApp } from "@/hooks/useMicroApp";
 
   const router = useRouter();
-  const { keepaliveKeyMap } = useFrame();
+  const { keepaliveKeyMap, deleteKeepaliveKey } = useFrame();
   const { microAppid, registerApp, isSystemMicroApp } = useMicroApp();
 
   const queryMicroAppComponent = (route, appid) => {
     return [microAppid.value, route.meta.appid].includes(appid)
       ? defineAsyncComponent(() => import("@/views/frame/index.vue"))
       : null;
+  };
+
+  const clickTest = () => {
+    console.log(keepaliveKeyMap);
+    deleteKeepaliveKey("WuJie_2");
   };
 </script>
 
@@ -24,10 +29,11 @@
     <button @click="router.push({ path: '/wujie_2' })">无界2</button>
     <button @click="router.push({ path: '/wujie_3' })">无界3</button>
     <button @click="router.push({ path: '/404' })">404</button>
+    <button @click="clickTest">关闭无界2标签</button>
 
     <router-view v-slot="{ Component, route }">
       <template v-for="appid in registerApp" :key="appid">
-        <keep-alive v-if="isSystemMicroApp(appid)" :include="Array.from(keepaliveKeyMap.values())">
+        <keep-alive v-if="isSystemMicroApp(appid)">
           <component :is="Component" :key="keepaliveKeyMap.get(route.name) || route.name" />
         </keep-alive>
         <component
