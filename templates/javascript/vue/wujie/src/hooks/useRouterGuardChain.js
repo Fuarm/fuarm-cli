@@ -125,24 +125,26 @@ const microAppHandler = () => {
 
   const before = (to, next) => {
     console.log("==microAppHandler before==", to);
-    // 注册微应用
-    microAppRegister(to.meta.appid);
     // 判断系统是否首次加载
     const isEmpty = isEmptyMicroAppid();
     // 判断应用是否首次加载
     const isFirstLoaded = isFirstLoadedByAppid(to.meta.appid);
     // 判断是否是系统应用
     const isSystemApp = isSystemMicroApp(to.meta.appid);
-    // 更新视图缓存key
-    frame.setKeepaliveKey(to.name, uuidv4());
-    // 更新当前的应用路由
-    updateMicroAppTargetRoute(to);
-    // 更新当前的应用id
-    updateMicroAppid(to.meta.appid);
-    _next = isEmpty ? null : next;
-    if (!isFirstLoaded && !isSystemApp) {
-      WuJie.bus.$emit(`router-change:${to.meta.appid}`, to.path);
-    }
+    (async () => {
+      // 注册微应用
+      await microAppRegister(to.meta.appid);
+      // 更新视图缓存key
+      frame.setKeepaliveKey(to.name, uuidv4());
+      // 更新当前的应用路由
+      updateMicroAppTargetRoute(to);
+      // 更新当前的应用id
+      updateMicroAppid(to.meta.appid);
+      _next = isEmpty ? null : next;
+      if (!isFirstLoaded && !isSystemApp) {
+        WuJie.bus.$emit(`router-change:${to.meta.appid}`, to.path);
+      }
+    })();
 
     return isEmpty || isSystemApp;
   };

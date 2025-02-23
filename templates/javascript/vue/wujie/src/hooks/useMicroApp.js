@@ -13,16 +13,14 @@ export const useMicroApp = () => {
     if (!registerApp.includes(appid)) {
       registerApp.push(appid);
     }
+
     if (microAppMap.size > 0) return;
 
     try {
       const data = await getMicroAppList();
 
       for (const item of data) {
-        microAppMap.set(item.appid, {
-          ...microAppMap.get(item.appid),
-          ...item
-        });
+        microAppMap.set(item.appid, item);
 
         if (item.code === "FRAME") {
           systemAppid = item.appid;
