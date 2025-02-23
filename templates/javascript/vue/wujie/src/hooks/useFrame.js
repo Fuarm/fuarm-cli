@@ -26,7 +26,7 @@ export const useFrame = () => {
     return routes?.length > 0;
   };
 
-  const queryRoutesByMicroAppid = (appid) => {
+  const queryRoutesByAppid = (appid) => {
     return routes?.filter((route) => route.appid === appid);
   };
 
@@ -50,7 +50,7 @@ export const useFrame = () => {
     init,
     updateRoutes,
     isNotEmptyByRoutes,
-    queryRoutesByMicroAppid,
+    queryRoutesByAppid,
     setKeepaliveKey,
     deleteKeepaliveKey,
     clearKeepaliveKey

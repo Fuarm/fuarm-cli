@@ -1,19 +1,20 @@
 <script setup>
-  import { computed } from "vue";
+  import { computed, useAttrs } from "vue";
   import { InstanceofPlugin } from "wujie-polyfill";
   import { useMicroApp } from "@/hooks/useMicroApp";
 
   import WuJie from "wujie-vue3";
   import { useFrame } from "@/hooks/useFrame.js";
 
+  const attrs = useAttrs();
   const frame = useFrame();
-  const { microAppid, queryMicroAppTargetURLByAppid } = useMicroApp();
+  const { queryMicroAppTargetURLByAppid } = useMicroApp();
 
   const props = {
-    appid: microAppid.value,
-    routes: frame.queryRoutesByMicroAppid(microAppid.value)
+    appid: attrs.appid,
+    routes: frame.queryRoutesByAppid(attrs.appid)
   };
-  const url = computed(() => queryMicroAppTargetURLByAppid(microAppid.value));
+  const url = computed(() => queryMicroAppTargetURLByAppid(attrs.appid));
   const wuJiePlugin = [InstanceofPlugin()];
 </script>
 
@@ -22,7 +23,7 @@
   <WuJie
     width="100%"
     height="100%"
-    :name="microAppid"
+    :name="attrs.appid"
     :url="url"
     :sync="false"
     :alive="true"

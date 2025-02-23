@@ -1,18 +1,18 @@
 <script setup>
-  import { computed, defineAsyncComponent } from "vue";
+  import { defineAsyncComponent } from "vue";
   import { useRouter } from "vue-router";
   import { useFrame } from "@/hooks/useFrame.js";
   import { useMicroApp } from "@/hooks/useMicroApp.js";
 
   const router = useRouter();
   const { keepaliveKeyMap } = useFrame();
-  const { microAppid, isSystemMicroApp } = useMicroApp();
+  const { microAppid, microAppMap, isSystemMicroApp } = useMicroApp();
 
-  const MicroAppComponent = computed(() => {
-    return isSystemMicroApp(microAppid.value)
-      ? null
-      : defineAsyncComponent(() => import("@/views/frame/index.vue"));
-  });
+  const queryMicroAppComponent = (route, appid) => {
+    return [microAppid.value, route.meta.appid].includes(appid)
+      ? defineAsyncComponent(() => import("@/views/frame/index.vue"))
+      : null;
+  };
 </script>
 
 <template>
@@ -25,10 +25,17 @@
     <button @click="router.push({ path: '/wujie_3' })">无界3</button>
     <button @click="router.push({ path: '/404' })">404</button>
     <router-view v-slot="{ Component, route }">
-      <keep-alive :include="Array.from(keepaliveKeyMap.values())">
-        <component :is="Component" :key="keepaliveKeyMap.get(route.name) || route.name" />
-      </keep-alive>
-      <component :is="MicroAppComponent" v-show="!Component" />
+      <template v-for="appid in microAppMap.keys()" :key="appid">
+        <keep-alive v-if="isSystemMicroApp(appid)" :include="Array.from(keepaliveKeyMap.values())">
+          <component :is="Component" :key="keepaliveKeyMap.get(route.name) || route.name" />
+        </keep-alive>
+        <component
+          :is="queryMicroAppComponent(route, appid)"
+          v-else
+          v-show="route.meta.appid === appid"
+          :appid="appid"
+        />
+      </template>
     </router-view>
   </div>
 </template>
