@@ -12,8 +12,9 @@ const {
   microAppRegister,
   isSystemMicroApp,
   updateMicroAppid,
-  updateMicroAppTargetRoute,
-  isEqualByAppid
+  isFirstLoadedByAppid,
+  isEmptyMicroAppid,
+  updateMicroAppTargetRoute
 } = useMicroApp();
 
 // 进度条
@@ -129,21 +130,26 @@ const microAppHandler = () => {
 
   const before = (to, next) => {
     console.log("==microAppHandler before==", to);
-    const isEqual = isEqualByAppid(to.meta.appid);
+    // 判断系统是否首次加载
+    const isEmpty = isEmptyMicroAppid();
+    // 判断应用是否首次加载
+    const isFirstLoaded = isFirstLoadedByAppid(to.meta.appid);
+    // 判断是否是系统应用
+    const isSystemApp = isSystemMicroApp(to.meta.appid);
+    // 更新当前的应用路由
     updateMicroAppTargetRoute(to);
+    // 更新当前的应用id
     updateMicroAppid(to.meta.appid);
-    _next = isEqual ? next : null;
-    if (isEqual && !isSystemMicroApp(to.meta.appid)) {
-      WuJie.bus.$emit("router-change", to);
+    _next = isEmpty ? null : next;
+    if (!isFirstLoaded && !isSystemApp) {
+      WuJie.bus.$emit(`router-change:${to.meta.appid}`, to.path);
     }
-    return !isEqual || isSystemMicroApp(to.meta.appid);
+    return isEmpty || isSystemApp;
   };
 
   const after = (to) => {
     console.log("==microAppHandler after==", to);
     frame.setKeepaliveKey(to.name, uuidv4());
-
-    // 记录每一个微服务的当前路由 （当前路由无变更 - ture）
     return isSystemMicroApp(to.meta.appid);
   };
 

@@ -1,19 +1,16 @@
 <script setup>
   import { computed } from "vue";
-  import { useRoute } from "vue-router";
   import { InstanceofPlugin } from "wujie-polyfill";
   import { useMicroApp } from "@/hooks/useMicroApp";
 
   import WuJie from "wujie-vue3";
   import { useFrame } from "@/hooks/useFrame.js";
 
-  const route = useRoute();
   const frame = useFrame();
-
   const { microAppid, queryMicroAppTargetURLByAppid } = useMicroApp();
 
   const props = {
-    appid: route.meta.appid,
+    appid: microAppid.value,
     routes: frame.queryRoutesByMicroAppid(microAppid.value)
   };
   const url = computed(() => queryMicroAppTargetURLByAppid(microAppid.value));

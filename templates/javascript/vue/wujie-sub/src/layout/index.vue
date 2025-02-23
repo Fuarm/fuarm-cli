@@ -2,8 +2,8 @@
   import { useRouter } from "vue-router";
 
   const router = useRouter();
-  window.$wujie?.bus.$on("router-change", (to) => {
-    router.push(to);
+  window.$wujie?.bus.$on(`router-change:${window.$wujie?.props.appid || ""}`, (path) => {
+    router.push({ path });
   });
 </script>
 

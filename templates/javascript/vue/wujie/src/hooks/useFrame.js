@@ -36,12 +36,23 @@ export const useFrame = () => {
     }
   };
 
+  const deleteKeepaliveKey = (key) => {
+    keepaliveKeyMap.delete(key);
+  };
+
+  const clearKeepaliveKey = () => {
+    // 如果存在永久保留的key
+    keepaliveKeyMap.clear();
+  };
+
   return {
     keepaliveKeyMap,
     init,
     updateRoutes,
     isNotEmptyByRoutes,
     queryRoutesByMicroAppid,
-    setKeepaliveKey
+    setKeepaliveKey,
+    deleteKeepaliveKey,
+    clearKeepaliveKey
   };
 };
