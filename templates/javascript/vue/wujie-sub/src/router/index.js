@@ -15,7 +15,12 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to) => {
   guardChain.after(to, router).invoke(() => {
-    console.log("==MicroApp Router after==", to);
+    console.log(
+      "%c==%s Invoke Router after==",
+      "color: green; font-weight: bold; line-height: 1.8;",
+      window.$wujie?.props.appid || "",
+      to
+    );
     window.$wujie?.bus.$emit("router-after");
   });
 });

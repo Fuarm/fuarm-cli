@@ -19,7 +19,11 @@ export const useMicroApp = () => {
       const data = await getMicroAppList();
 
       for (const item of data) {
-        microAppMap.set(item.appid, item);
+        microAppMap.set(item.appid, {
+          ...microAppMap.get(item.appid),
+          ...item
+        });
+
         if (item.code === "FRAME") {
           systemAppid = item.appid;
         }

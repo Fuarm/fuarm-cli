@@ -30,7 +30,12 @@ const dynamicRouteHandler = () => {
       return next({ name: "Layout" });
     }
 
-    console.log("==MicroApp dynamicRouteHandler before==", to);
+    console.log(
+      "%c==%s dynamicRouteHandler before==",
+      "color: green; font-weight: bold; line-height: 1.8;",
+      window.$wujie?.props.appid || "",
+      to
+    );
     (async () => {
       let isRedirect = false;
       // 案例：菜单管理路由
