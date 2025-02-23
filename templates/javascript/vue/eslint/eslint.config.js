@@ -1,18 +1,18 @@
 import globals from "globals";
 import js from "@eslint/js";
 import vue from "eslint-plugin-vue";
-import prettier from "eslint-plugin-prettier";
+import prettierRecommended from "eslint-plugin-prettier/recommended";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   { files: ["**/*.{js,mjs,cjs,vue}"] },
   { languageOptions: { globals: globals.browser } },
   js.configs.recommended,
+  prettierRecommended,
   ...vue.configs["flat/recommended"],
   {
     plugins: {
-      vue,
-      prettier
+      vue
     },
     rules: {
       "vue/no-unused-vars": "warn", // 启用 Vue 的未使用变量警告

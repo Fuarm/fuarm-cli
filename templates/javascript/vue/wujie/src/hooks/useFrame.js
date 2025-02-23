@@ -1,4 +1,4 @@
-import router from "@/router/index.js";
+import router from "@/router";
 
 // 存在当前页面的路由数据
 let routes = [];

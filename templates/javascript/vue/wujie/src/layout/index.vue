@@ -1,8 +1,8 @@
 <script setup>
   import { defineAsyncComponent } from "vue";
   import { useRouter } from "vue-router";
-  import { useFrame } from "@/hooks/useFrame.js";
-  import { useMicroApp } from "@/hooks/useMicroApp.js";
+  import { useFrame } from "@/hooks/useFrame";
+  import { useMicroApp } from "@/hooks/useMicroApp";
 
   const router = useRouter();
   const { keepaliveKeyMap } = useFrame();
@@ -24,6 +24,7 @@
     <button @click="router.push({ path: '/wujie_2' })">无界2</button>
     <button @click="router.push({ path: '/wujie_3' })">无界3</button>
     <button @click="router.push({ path: '/404' })">404</button>
+
     <router-view v-slot="{ Component, route }">
       <template v-for="appid in microAppMap.keys()" :key="appid">
         <keep-alive v-if="isSystemMicroApp(appid)" :include="Array.from(keepaliveKeyMap.values())">

@@ -4,7 +4,7 @@
   import { useMicroApp } from "@/hooks/useMicroApp";
 
   import WuJie from "wujie-vue3";
-  import { useFrame } from "@/hooks/useFrame.js";
+  import { useFrame } from "@/hooks/useFrame";
 
   const attrs = useAttrs();
   const frame = useFrame();
