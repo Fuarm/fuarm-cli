@@ -12,8 +12,6 @@
 
 <template>
   <div>
-    <div>布局222</div>
-
     <router-view v-slot="{ Component, route }">
       <keep-alive>
         <component :is="Component" :key="keepaliveKeyMap?.get(route.name)" />
