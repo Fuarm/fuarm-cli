@@ -6,7 +6,7 @@
 
   const router = useRouter();
   const { keepaliveKeyMap } = useFrame();
-  const { microAppid, microAppMap, isSystemMicroApp } = useMicroApp();
+  const { microAppid, registerApp, isSystemMicroApp } = useMicroApp();
 
   const queryMicroAppComponent = (route, appid) => {
     return [microAppid.value, route.meta.appid].includes(appid)
@@ -26,7 +26,7 @@
     <button @click="router.push({ path: '/404' })">404</button>
 
     <router-view v-slot="{ Component, route }">
-      <template v-for="appid in microAppMap.keys()" :key="appid">
+      <template v-for="appid in registerApp" :key="appid">
         <keep-alive v-if="isSystemMicroApp(appid)" :include="Array.from(keepaliveKeyMap.values())">
           <component :is="Component" :key="keepaliveKeyMap.get(route.name) || route.name" />
         </keep-alive>

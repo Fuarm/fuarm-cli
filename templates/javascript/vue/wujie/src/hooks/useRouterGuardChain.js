@@ -21,7 +21,6 @@ const {
 const progressHandler = () => {
   const init = () => {
     WuJie.bus.$on("router-after", () => {
-      console.log("无界 after 进度条");
       topbar.hide();
     });
   };
@@ -31,7 +30,6 @@ const progressHandler = () => {
   };
 
   const after = () => {
-    console.log("after 进度条");
     topbar.hide();
   };
 
@@ -92,9 +90,6 @@ const dynamicRouteHandler = () => {
 
     console.log("==dynamicRouteHandler before==", to);
     (async () => {
-      // 注册微应用
-      await microAppRegister();
-
       let isRedirect = false;
       // 案例：菜单管理路由
       const dynamicRoutes = await getMenuList();
@@ -130,6 +125,8 @@ const microAppHandler = () => {
 
   const before = (to, next) => {
     console.log("==microAppHandler before==", to);
+    // 注册微应用
+    microAppRegister(to.meta.appid);
     // 判断系统是否首次加载
     const isEmpty = isEmptyMicroAppid();
     // 判断应用是否首次加载
@@ -144,6 +141,7 @@ const microAppHandler = () => {
     if (!isFirstLoaded && !isSystemApp) {
       WuJie.bus.$emit(`router-change:${to.meta.appid}`, to.path);
     }
+
     return isEmpty || isSystemApp;
   };
 

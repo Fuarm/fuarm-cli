@@ -1,21 +1,27 @@
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 
 import { getMicroAppList } from "@/api";
 
 const microAppMap = new Map();
 const microAppid = ref(null);
-let frameMicroAppid = null;
+const registerApp = reactive([]);
+let systemAppid = null;
 
 export const useMicroApp = () => {
-  const microAppRegister = async () => {
+  const microAppRegister = async (appid) => {
+    // 注册App
+    if (!registerApp.includes(appid)) {
+      registerApp.push(appid);
+    }
     if (microAppMap.size > 0) return;
+
     try {
       const data = await getMicroAppList();
 
       for (const item of data) {
         microAppMap.set(item.appid, item);
         if (item.code === "FRAME") {
-          frameMicroAppid = item.appid;
+          systemAppid = item.appid;
         }
       }
     } catch (error) {
@@ -24,7 +30,7 @@ export const useMicroApp = () => {
     }
   };
 
-  const isSystemMicroApp = (appid) => !appid || frameMicroAppid === appid;
+  const isSystemMicroApp = (appid) => !appid || systemAppid === appid;
 
   const isEmptyMicroAppid = () => {
     return !microAppid.value;
@@ -35,7 +41,7 @@ export const useMicroApp = () => {
   };
 
   const updateMicroAppid = (appid) => {
-    microAppid.value = isSystemMicroApp(appid) ? frameMicroAppid : appid;
+    microAppid.value = isSystemMicroApp(appid) ? systemAppid || "SYSTEM" : appid;
   };
 
   const updateMicroAppTargetRoute = (to) => {
@@ -53,7 +59,7 @@ export const useMicroApp = () => {
 
   return {
     microAppid,
-    microAppMap,
+    registerApp,
     microAppRegister,
     isSystemMicroApp,
     isEmptyMicroAppid,
