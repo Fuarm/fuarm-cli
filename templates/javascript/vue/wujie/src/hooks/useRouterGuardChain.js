@@ -8,7 +8,13 @@ import { getMenuList } from "@/api";
 import { useFrame } from "@/hooks/useFrame";
 
 const frame = useFrame();
-const { microAppRegister, isSystemMicroApp, updateMicroAppid, isEqualByAppid } = useMicroApp();
+const {
+  microAppRegister,
+  isSystemMicroApp,
+  updateMicroAppid,
+  updateMicroAppTargetTo,
+  isEqualByAppid
+} = useMicroApp();
 
 // 进度条
 const progressHandler = () => {
@@ -96,7 +102,7 @@ const dynamicRouteHandler = () => {
           isRedirect = true;
         }
         router.addRoute(
-          ...[dynamicRoute.layout, createRoute(dynamicRoute)].filter((item) => !!item)
+            ...[dynamicRoute.layout, createRoute(dynamicRoute)].filter((item) => !!item)
         );
       });
 
@@ -122,9 +128,12 @@ const microAppHandler = () => {
   const before = (to, next) => {
     console.log("==microAppHandler before==", to);
     const isEqual = isEqualByAppid(to.meta.appid);
+    updateMicroAppTargetTo(to);
     updateMicroAppid(to.meta.appid);
     _next = isEqual ? next : null;
-    // WuJie.bus.$emit("router-change", to);
+    if (isEqual && !isSystemMicroApp(to.meta.appid)) {
+      WuJie.bus.$emit("router-change", to);
+    }
     return !isEqual || isSystemMicroApp(to.meta.appid);
   };
 
