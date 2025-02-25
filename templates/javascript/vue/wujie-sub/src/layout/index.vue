@@ -1,13 +1,18 @@
 <script setup>
-  import { computed } from "vue";
   import { useRouter } from "vue-router";
+  import { reactive } from "vue";
 
   const router = useRouter();
-  const keepaliveKeyMap = computed(() => window.$wujie?.props.keepaliveKeyMap);
 
-  window.$wujie?.bus.$on(`router-change:${window.$wujie?.props.appid || ""}`, (path) => {
-    router.push({ path });
-  });
+  const keepaliveKeyMap = reactive(new Map(window.$wujie?.props.keepaliveKeyMap));
+
+  window.$wujie?.bus.$on(
+    `router-change:${window.$wujie?.props.appid || ""}`,
+    (path, name, value) => {
+      keepaliveKeyMap.set(name, value);
+      router.push({ path });
+    }
+  );
 </script>
 
 <template>

@@ -142,7 +142,12 @@ const microAppHandler = () => {
       updateMicroAppid(to.meta.appid);
       _next = isEmpty ? null : next;
       if (!isFirstLoaded && !isSystemApp) {
-        WuJie.bus.$emit(`router-change:${to.meta.appid}`, to.path);
+        WuJie.bus.$emit(
+          `router-change:${to.meta.appid}`,
+          to.path,
+          to.name,
+          frame.keepaliveKeyMap.get(to.name)
+        );
       }
     })();
 
