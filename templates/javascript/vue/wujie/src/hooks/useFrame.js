@@ -1,11 +1,10 @@
-import { reactive } from "vue";
 import router from "@/router";
 
 // 存在当前页面的路由数据
 let routes = [];
 
 // 存储当前缓存页面key
-const keepaliveKeyMap = reactive(new Map());
+const keepaliveKeyMap = new Map();
 
 const frameMap = new Map();
 
@@ -53,19 +52,19 @@ export const useFrame = () => {
 
   const clearKeepaliveKey = () => {
     // 临时存储禁止删除的数据
-    const temp = disableDeleteFrameKey.map(key => {
+    const temp = disableDeleteFrameKey.map((key) => {
       return {
         key,
         keepaliveValue: keepaliveKeyMap.get(key),
         frameValue: frameMap.get(key)
-      }
+      };
     });
     // 清空
     keepaliveKeyMap.clear();
     frameMap.clear();
 
-    temp.forEach(item => {
-      setKeepaliveKey(item.key, item.keepaliveValue, item.frameValue)
+    temp.forEach((item) => {
+      setKeepaliveKey(item.key, item.keepaliveValue, item.frameValue);
     });
   };
 
