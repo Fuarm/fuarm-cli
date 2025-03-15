@@ -2,21 +2,17 @@ const createChain = () => {
   const EXEC_STATE = {
     pending: 0,
     fulfilled: 1,
-    rejected: 2
+    rejected: 2,
   };
 
   let state = EXEC_STATE.fulfilled;
   let exec = true;
+  // 拒绝次数
+  let rejectedCount = 0;
 
-  const rejected = () => {
-    state = EXEC_STATE.rejected;
-    return this;
-  };
-
-  const fulfilled = (handler) => {
-    state = EXEC_STATE.fulfilled;
-    exec = handler();
-    return this;
+  const formatExecAndSetState = () => {
+    exec = exec ?? true;
+    state = exec === false ? EXEC_STATE.rejected : EXEC_STATE.pending;
   };
 
   const Chain = function () {
@@ -24,28 +20,49 @@ const createChain = () => {
   };
 
   Chain.prototype = {
-    invoke: function (handler) {
-      if (state === EXEC_STATE.pending && exec !== true) {
-        return rejected.call(this);
+    invoke: async function (handler) {
+      if (exec instanceof Promise) {
+        exec = await exec;
       }
-      return fulfilled.call(this, handler);
-    },
-    or: function () {
-      state = EXEC_STATE.pending;
+      if (typeof exec !== "boolean") {
+        return this;
+      }
+
+      switch (state) {
+        case EXEC_STATE.pending:
+          exec = handler();
+          formatExecAndSetState();
+          break;
+        case EXEC_STATE.fulfilled:
+          break;
+        case EXEC_STATE.rejected:
+          rejectedCount++;
+      }
+
       return this;
     },
     and: function () {
-      if (state === EXEC_STATE.rejected) {
-        exec = true;
+      if (state === EXEC_STATE.rejected && rejectedCount > 0) {
+        state = EXEC_STATE.pending;
+        rejectedCount = 0;
       }
-      return this.or();
-    }
+      return this;
+    },
+    end: function () {
+      state = EXEC_STATE.fulfilled;
+      return exec;
+    },
+    start: function () {
+      exec = true;
+      state = EXEC_STATE.pending;
+      rejectedCount = 0;
+
+      return this;
+    },
   };
 
   return {
     instance: new Chain(),
-    Chain: Chain
+    Chain: Chain,
   };
 };
-
-export default createChain;
